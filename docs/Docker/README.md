@@ -17,6 +17,13 @@ For more extensive experiments and custimization of framework optins we recommen
 - [Example Commands](#example-commands)
 
 ---
+ In order to run RPTK in the Docker you need to pull the Docker first
+
+**Pull the image:**
+
+```bash
+docker pull jonasboh/rptk:v1.0
+```
 
 ## Quick Start
 

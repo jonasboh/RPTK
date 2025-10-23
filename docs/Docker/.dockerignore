@@ -1,0 +1,19 @@
+# Ignore typical large/unnecessary files
+**/__pycache__/
+**/*.pyc
+**/.git/
+**/.gitignore
+**/.mypy_cache/
+**/.pytest_cache/
+**/.DS_Store
+**/*.nii
+**/*.nii.gz
+**/*.dcm
+**/*.h5
+**/*.pt
+**/*.pth
+data/
+datasets/
+outputs/
+workspace/
+

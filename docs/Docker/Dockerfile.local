@@ -1,0 +1,39 @@
+# --- STRICT OFFLINE DOCKERFILE ---
+# Base image must be present locally (use `docker load -i micromamba_1.5.7.tar`)
+ARG BASE_IMAGE=mambaorg/micromamba:1.5.7
+FROM ${BASE_IMAGE}
+
+USER root
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Runtime paths (env is unpacked to /opt/conda/envs/rptk)
+ENV MAMBA_ROOT_PREFIX=/opt/conda
+ENV PATH=/opt/conda/envs/rptk/bin:/opt/conda/bin:/usr/local/bin:$PATH
+ENV PYTHONUNBUFFERED=1
+# Make /opt importable so "import rptk" finds /opt/rptk
+ENV PYTHONPATH=/opt
+
+# Workspace & code paths
+ENV WORKDIR=/workspace
+ENV RPTK_DIR=/opt/rptk
+RUN mkdir -p ${WORKDIR} /opt && chown -R mambauser:mambauser /opt ${WORKDIR}
+
+# ---- OFFLINE ENV: unpack prebuilt conda-pack tarball (no network) ----
+# Put rptk_env.tar.gz next to this Dockerfile before building.
+COPY --chown=mambauser:mambauser rptk_env.tar.gz /tmp/rptk_env.tar.gz
+RUN mkdir -p /opt/conda/envs/rptk \
+ && tar -xzf /tmp/rptk_env.tar.gz -C /opt/conda/envs/rptk \
+ && /opt/conda/envs/rptk/bin/python /opt/conda/envs/rptk/bin/conda-unpack \
+ && rm -f /tmp/rptk_env.tar.gz
+
+# ---- Project code & entrypoint (copy only; no installs) ----
+COPY --chown=mambauser:mambauser rptk ${RPTK_DIR}
+COPY --chown=mambauser:mambauser docker_entrypoint.py /usr/local/bin/docker_entrypoint.py
+RUN chmod +x /usr/local/bin/docker_entrypoint.py
+
+# Run as non-root
+USER mambauser
+WORKDIR ${WORKDIR}
+
+# Default entry: your tool (CLI args go to docker_entrypoint.py)
+ENTRYPOINT ["python","/usr/local/bin/docker_entrypoint.py"]
