@@ -1,0 +1,60 @@
+# This is an example of settings that can be used as a starting point for analyzing CT data. This is only intended as a
+# starting point and is not likely to be the optimal settings for your dataset. Some points in determining better values
+# are added as comments where appropriate
+
+# When adapting and using these settings for an analysis, be sure to add the MIRP version used to allow you to
+# easily recreate your extraction at a later timepoint:
+
+# #############################  Extracted using MIRP version: 1.3.0  ######################################
+
+general_parameters:
+  by_slice: True
+
+image_interpolation_parameters:
+    interpolate: False
+    anti_aliasing: False
+    spline_order: 3
+  
+# perturbation_settings:  ## Pertubation is handeled sepperatly before mirp computation
+# post_process_settings:  ## MRI normalization happend before
+# image_transformation_parameters:  ## Image transformation happend before
+    
+feature_extraction_parameters:
+    by_slice: False
+    no_approximation: False
+    ibsi_compliant: True
+    base_feature_families: "all"
+    base_discretisation_method: "fixed_bin_size"
+    base_discretisation_bin_number: 25.0
+    ivh_discretisation_method: "fixed_bin_size"
+    ivh_discretisation_bin_number: 25.0
+    glcm_distance: 1.0
+    glcm_spatial_method: ["2d_average", "2d_slice_merge", "3d_average", "3d_volume_merge"]
+    glrlm_spatial_method: ["2d_average", "2d_slice_merge", "3d_average", "3d_volume_merge"]
+    glszm_spatial_method: ["2d", "3d"]
+    gldzm_spatial_method: ["2d", "3d"]
+    ngtdm_spatial_method: ["2d", "3d"]
+    ngldm_spatial_method: ["2d", "3d"]
+    ngldm_distance: [1.0]
+    ngldm_difference_level: [0.0]
+    response_map_feature_families: "all"
+
+image_postprocessing:
+    intensity_normalisation: "none"
+
+resegmentation_parameters:
+    resegmentation_method: "none"
+    resegmentation_sigma: 3.0
+
+roi_interpolate_parameters:
+    roi_spline_order: 1
+    roi_interpolation_mask_inclusion_threshold: 0.5
+    
+experiment_parameters:
+    modality: "CT"
+    provide_diagnostics: True
+    compute_features: True
+    extract_images: False
+    plot_images: False
+    keep_images_in_memory: False
+    
